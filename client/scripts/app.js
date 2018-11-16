@@ -1,8 +1,7 @@
 var App = {
+  $spinner: $(".spinner img"),
 
-  $spinner: $('.spinner img'),
-
-  username: 'anonymous',
+  username: "anonymous",
 
   initialize: function() {
     App.username = window.location.search.substr(10);
@@ -14,15 +13,22 @@ var App = {
     // Fetch initial batch of messages
     App.startSpinner();
     App.fetch(App.stopSpinner);
-
+    Parse.create('aaaaaaaaaaaaaaaaa');
   },
 
-  fetch: function(callback = ()=>{}) {
-    Parse.readAll((data) => {
+  fetch: function(
+    callback = data => {
+      console.log('test');
+      $(".chats").append(`<p> test </p>`);
+    }
+  ) {
+    Parse.readAll(data => {
       // examine the response from the server request:
-      console.log(data);
-
-      callback();
+      console.log(data.results);
+      for (const item of data.results) {
+        $("#chats").append(`<p><b>${item.username}</b> ${item.text} ${item.createdAt} </p>`);
+      }
+      callback(data);
     });
   },
 
@@ -32,7 +38,7 @@ var App = {
   },
 
   stopSpinner: function() {
-    App.$spinner.fadeOut('fast');
+    App.$spinner.fadeOut("fast");
     FormView.setStatus(false);
   }
 };
